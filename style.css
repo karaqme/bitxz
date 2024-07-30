@@ -6,7 +6,7 @@ body {
 .user_name {
     padding: 50px 50px;
     background: rgba(124, 124, 124, 0.505);
-    color: white;
+    color: rgb(0, 0, 0);
     border-radius: 50px;
     text-align: center;
 }
