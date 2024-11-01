@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Возраст аккаунта в Telegram</title>
+    <style>
+        body {
+            color: var(--tg-theme-text-color);
+            background: var(--tg-theme-bg-color);
+            text-align: center;
+            padding: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Получение возраста аккаунта</h1>
+    <button class="btn" id="getAgeBtn">Получить возраст аккаунта</button>
+    <p id="result"></p>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        const tg = window.Telegram.WebApp;
+
+        document.getElementById('getAgeBtn').onclick = function() {
+            // Получаем данные пользователя
+            const userData = tg.initDataUnsafe.user;
+            const registrationDate = new Date(userData.date); // Предполагается, что у вас есть дата регистрации
+
+            // Вычисляем возраст аккаунта
+            const currentDate = new Date();
+            const age = currentDate.getFullYear() - registrationDate.getFullYear();
+            const monthDiff = currentDate.getMonth() - registrationDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < registrationDate.getDate())) {
+                age--;
+            }
+
+            // Отображаем результат
+            document.getElementById('result').innerText = `Возраст аккаунта: ${age} лет`;
+
+            // Здесь вы можете отправить данные на сервер для записи в базу данных
+            // Например, используя fetch API
+            fetch('https://your-server.com/api/saveAge', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId: userData.id, age: age })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Данные успешно сохранены:', data);
+            })
+            .catch((error) => {
+                console.error('Ошибка при сохранении данных:', error);
+            });
+        };
+    </script>
+</body>
+</html>

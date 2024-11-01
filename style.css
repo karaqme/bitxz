@@ -1,0 +1,8 @@
+// script.js
+fetch('https://api.binance.com/api/v3/ticker/price')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        // Update the UI with the fetched data
+    })
+    .catch(error => console.error(error));
